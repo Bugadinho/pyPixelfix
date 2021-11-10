@@ -1,6 +1,10 @@
 # pyPixelfix
 Takes all fully transparent pixels in a PNG and sets their colors to the nearest non-transparent pixel's color without altering their alpha value.
 
+## Requirements
+- Pillow ```pip install pillow```
+- SciPy ```pip install scipy```
+
 ## Usage
 This Python script works in a very simple manner, it takes all of it's arguments and, if they are valid image files, will overwrite them with a "pixelfixed" version.
 - "Pixelfixing" a single image
