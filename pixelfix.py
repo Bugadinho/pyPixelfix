@@ -11,7 +11,7 @@ neighborLocations = [
     [-1,  0]
 ]
 
-def pixelFix(image):
+def pixelFix(image, threshold = 0):
     image = image.convert('RGBA')
     outputImage = image.copy()
 
@@ -23,11 +23,11 @@ def pixelFix(image):
         for y in range(image.height):
             r, g, b, a = image.getpixel((x, y))
 
-            if a != 0:
+            if a > threshold:
                 for location in neighborLocations:
                     if 0 <= x + location[0] <= image.width - 1 and 0 <= y + location[1] <= image.height - 1:
                         _, _, _, a2 = image.getpixel((x + location[0], y + location[1]))
-                        if a2 == 0:
+                        if a2 <= threshold:
                             pointsList.append((x, y))
                             colors[(x, y)] = (r, g, b)
                             break
