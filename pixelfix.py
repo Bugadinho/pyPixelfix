@@ -25,11 +25,12 @@ def pixelFix(image):
 
             if a != 0:
                 for location in neighborLocations:
-                    _, _, _, a2 = image.getpixel((x + location[0], y + location[1]))
-                    if a2 == 0:
-                        pointsList.append((x, y))
-                        colors[(x, y)] = (r, g, b)
-                        break
+                    if 0 <= x + location[0] <= image.width - 1 and 0 <= y + location[1] <= image.height - 1:
+                        _, _, _, a2 = image.getpixel((x + location[0], y + location[1]))
+                        if a2 == 0:
+                            pointsList.append((x, y))
+                            colors[(x, y)] = (r, g, b)
+                            break
             else:
                 emptyPoints.append((x, y))
     
