@@ -1,3 +1,4 @@
+from multiprocessing import Pool
 from PIL.Image import Image
 from scipy import spatial
 
@@ -25,22 +26,21 @@ def PixelFix(image: Image, threshold: int = 0) -> Image:
     
     """
 
-    image = image.convert('RGBA')
-    output_image = image.copy()
+    output_image = image.copy().convert('RGBA')
 
     points_list = []
     empty_points = []
     colors = {}
     any_empty_point = False
 
-    for x in range(image.width):
-        for y in range(image.height):
-            r, g, b, a = image.getpixel((x, y))
+    for x in range(output_image.width):
+        for y in range(output_image.height):
+            r, g, b, a = output_image.getpixel((x, y))
 
             if a > threshold:
                 for location in NEIGHBOR_LOCATIONS:
-                    if (x, y) not in colors and 0 <= x + location[0] <= image.width - 1 and 0 <= y + location[1] <= image.height - 1:
-                        _, _, _, a2 = image.getpixel((x + location[0], y + location[1]))
+                    if (x, y) not in colors and 0 <= x + location[0] <= output_image.width - 1 and 0 <= y + location[1] <= output_image.height - 1:
+                        _, _, _, a2 = output_image.getpixel((x + location[0], y + location[1]))
                         if a2 <= threshold:
                             points_list.append((x, y))
                             colors[(x, y)] = (r, g, b)
@@ -56,7 +56,7 @@ def PixelFix(image: Image, threshold: int = 0) -> Image:
             closest_point = points_list[index]
 
             closest_color = colors[closest_point]
-            _, _, _, a = image.getpixel((point[0], point[1]))
+            _, _, _, a = output_image.getpixel((point[0], point[1]))
             
             output_image.putpixel((point[0], point[1]), (closest_color[0], closest_color[1], closest_color[2], a))
     
