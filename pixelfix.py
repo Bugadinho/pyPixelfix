@@ -18,6 +18,7 @@ def pixelFix(image, threshold = 0):
     pointsList = []
     emptyPoints = []
     colors = {}
+    anyEmptyPoint = False
 
     for x in range(image.width):
         for y in range(image.height):
@@ -32,13 +33,17 @@ def pixelFix(image, threshold = 0):
                             colors[(x, y)] = (r, g, b)
                             break
             else:
+                anyEmptyPoint = True
                 emptyPoints.append((x, y))
     
-    tree = spatial.KDTree(pointsList)
-    distances, indexes = tree.query(emptyPoints, workers = -1)
-    for point, index in zip(emptyPoints, indexes):
-        closestPoint = pointsList[index]
+    if anyEmptyPoint == True:
+        tree = spatial.KDTree(pointsList)
+        distances, indexes = tree.query(emptyPoints, workers = -1)
+        for point, index in zip(emptyPoints, indexes):
+            closestPoint = pointsList[index]
 
-        closestColor = colors[closestPoint]
-        outputImage.putpixel((point[0], point[1]), (closestColor[0], closestColor[1], closestColor[2], 0))
+            closestColor = colors[closestPoint]
+            _, _, _, a = image.getpixel((point[0], point[1]))
+            
+            outputImage.putpixel((point[0], point[1]), (closestColor[0], closestColor[1], closestColor[2], a))
     return outputImage
