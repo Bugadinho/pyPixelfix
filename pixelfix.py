@@ -55,7 +55,7 @@ def PixelFix(image: Image, threshold: int = 0) -> Image:
                 any_empty_point = True
                 empty_points.append((x, y))
     
-    Parallel(n_jobs=4)(delayed(process_x)(x) for x in range(output_image.width))
+    Parallel(n_jobs=-2)(delayed(process_x)(x) for x in range(output_image.width))
     
     if any_empty_point == True:
         tree = spatial.KDTree(points_list)
