@@ -4,8 +4,7 @@ from PIL import Image
 from pixelfix import pixelFix
 
 if len(sys.argv) <= 1:
-    print("ERROR! A file was expected!")
-    exit()
+    sys.exit("A file was expected!")
 
 print("Beginning processing...")
 
