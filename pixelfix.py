@@ -39,7 +39,7 @@ def PixelFix(image: Image, threshold: int = 0) -> Image:
 
             if a > threshold:
                 for location in NEIGHBOR_LOCATIONS:
-                    if 0 <= x + location[0] <= image.width - 1 and 0 <= y + location[1] <= image.height - 1:
+                    if (x, y) not in colors and 0 <= x + location[0] <= image.width - 1 and 0 <= y + location[1] <= image.height - 1:
                         _, _, _, a2 = image.getpixel((x + location[0], y + location[1]))
                         if a2 <= threshold:
                             points_list.append((x, y))
