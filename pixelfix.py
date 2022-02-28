@@ -1,5 +1,5 @@
-from multiprocessing import Pool
 from PIL.Image import Image
+from joblib import Parallel, delayed
 from scipy import spatial
 
 NEIGHBOR_LOCATIONS = [
@@ -33,7 +33,13 @@ def PixelFix(image: Image, threshold: int = 0) -> Image:
     colors = {}
     any_empty_point = False
 
-    for x in range(output_image.width):
+    def process_x(x):
+        nonlocal output_image
+        nonlocal points_list
+        nonlocal empty_points
+        nonlocal colors
+        nonlocal any_empty_point
+
         for y in range(output_image.height):
             r, g, b, a = output_image.getpixel((x, y))
 
@@ -48,6 +54,8 @@ def PixelFix(image: Image, threshold: int = 0) -> Image:
             else:
                 any_empty_point = True
                 empty_points.append((x, y))
+    
+    Parallel(n_jobs=4)(delayed(process_x)(x) for x in range(output_image.width))
     
     if any_empty_point == True:
         tree = spatial.KDTree(points_list)
